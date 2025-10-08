@@ -1,10 +1,10 @@
-package NetBox::API::REST;
+package NetBox::Client::REST;
 use strict;
 use warnings 'FATAL' => 'all';
 no warnings qw(experimental::signatures);
 use feature qw(signatures);
 use boolean qw(:all);
-use parent qw(NetBox::API::Common);
+use parent qw(NetBox::Client::Common);
 
 use Data::Dumper;
 use HTTP::Request;
@@ -19,7 +19,7 @@ BEGIN {
     our @EXPORT_OK = qw();
 } #}}}
 
-our $VERSION = $NetBox::API::Common::VERSION;
+our $VERSION = $NetBox::Client::Common::VERSION;
 
 sub __call :prototype($$$$$) ($class, $self, $method, $query, $vars = {}) {
     #{{{
@@ -37,18 +37,18 @@ sub __call :prototype($$$$$) ($class, $self, $method, $query, $vars = {}) {
                 my $content = $response->decoded_content;
                 my $payload = decode_json $content;
                 unless (defined $payload) {
-                    $self->__seterror(NetBox::API::Common::E_DECFAIL);
+                    $self->__seterror(NetBox::Client::Common::E_DECFAIL);
                     return qw();
                 }
                 @result = @{$payload}
             }
         } else {
-            $self->__seterror(NetBox::API::Common::E_REQFAIL, $response->status_line);
+            $self->__seterror(NetBox::Client::Common::E_REQFAIL, $response->status_line);
             return qw();
         }
         alarm 0;
     };
-    $self->__seterror(NetBox::API::Common::E_TIMEOUT) if $@;
+    $self->__seterror(NetBox::Client::Common::E_TIMEOUT) if $@;
     return @result;
 } #}}}
 
@@ -92,14 +92,14 @@ sub GET :prototype($$$$) ($class, $self, $query, $vars = {}) {
                 $vars->{'offset'} += $self->limit;
                 $i = boolean::false if scalar @result >= $count;
             } else {
-                $self->__seterror(NetBox::API::Common::E_REQFAIL, $response->status_line);
+                $self->__seterror(NetBox::Client::Common::E_REQFAIL, $response->status_line);
                 $i = boolean::false;
             }
         }
         alarm 0;
     };
     if ($@) {
-        $self->__seterror(NetBox::API::Common::E_TIMEOUT);
+        $self->__seterror(NetBox::Client::Common::E_TIMEOUT);
         return qw();
     }
     return @result;

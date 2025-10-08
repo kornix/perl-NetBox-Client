@@ -1,6 +1,6 @@
 # NAME
 
-**NetBox::API** - perl5 interface to NetBox API
+**NetBox::Client** - perl5 interface to NetBox API
 
 # DESCRIPTION
 
@@ -9,12 +9,10 @@ modification and deletion) as described in NetBox API Overview.
 
 # CAVEATS
 
-- **\***
-
-    This module is written using \`signatures\` feature. As for me,
-    it makes code clearer. However, it requires perl 5.10+. All
-    more or less modern OSes has much more newer perl included, so
-    don't think it will be a problem.
+- This module is written using \`signatures\` feature. As for me,
+it makes code clearer. However, it requires perl 5.10+. All
+more or less modern OSes has much more newer perl included, so
+don't think it will be a problem.
 
 # LIMITATIONS
 
@@ -22,29 +20,23 @@ Unlike REST, GraphQL mode has a bunch of limitations, which (in my opinion)
 makes it less convinient then REST. However, I have to admit, it works faster,
 noticeably faster, then REST. So, about the limitations:
 
-- **\*** GraphQL is disabled by default
-
-    GraphQL support is disabled in NetBox by default; to enable it, you have to
-    set \`GRAPHQL\_ENABLED\` option to \`true\` in NetBox configuration file;
-
-- **\*** GraphQL is intended for data retrievement only
-- 
+- GraphQL support is disabled in NetBox by default; to enable it, you have to
+set \`GRAPHQL\_ENABLED\` option to \`true\` in NetBox configuration file; 
  
-- **\*** Custom fields as filters
-
-    Custom fields can be used as filters in NetBox \*\*v4.4+\*\* only!
-
-- **\*** Custom fields returned
-
-    It is possible either not to retrieve custom fields at all or to retrieve all
-    of them - there is no way to retrieve only part of them. At least in current
-    NetBox version.
+- GraphQL is intended for data retrievement only; 
+ 
+- Custom fields can be used as filters in NetBox \*\*v4.4+\*\* only! 
+ 
+- It is possible either not to retrieve custom fields at all or to retrieve all
+of them - there is no way to retrieve only part of them. At least in current
+NetBox version. 
+ 
 
 # **SYNOPSIS**
 
-    use NetBox::API;
+    use NetBox::Client;
     
-    my $netbox = NetBox::API->new(
+    my $netbox = NetBox::Client->new(
         'baseurl' => 'https://localhost:8001',
         'token'   => 'authorization+token',
         'method'  => 'rest'
@@ -73,9 +65,9 @@ noticeably faster, then REST. So, about the limitations:
 
 - **new(OPTIONS)**                                                                                                 
 
-    NetBox::API object constructor. Is used as follows:
+    NetBox::Client object constructor. Is used as follows:
 
-        my $netbox = NetBox::API->new(
+        my $netbox = NetBox::Client->new(
             'baseurl' => 'http://localhost:8001',
             'token'   => 'authorization+token',
             'mode'    => 'rest',
@@ -236,11 +228,11 @@ noticeably faster, then REST. So, about the limitations:
     this one, which brings them all and binds 'em with a different \`METHOD\`
     argument required, as described in NetBox REST API Overview:
 
-    - **\*** retrieve() - \`GET\`;
-    - **\*** create() -   \`POST\`;
-    - **\*** replace() -  \`PUT\`;
-    - **\*** update() -   \`PATCH\`;
-    - **\*** delete() -   \`DELETE\`;
+    - retrieve() - \`GET\`;
+    - create() - \`POST\`;
+    - replace() - \`PUT\`;
+    - update() - \`PATCH\`;
+    - delete() - \`DELETE\`;
 
     \`QUERY\` and \`OPTIONS\` are the same, provided to a service methods.
 
@@ -251,7 +243,7 @@ noticeably faster, then REST. So, about the limitations:
 
 - **error()**
 
-    Takes no arguments. Returns \`false\` if NetBox::API object is
+    Takes no arguments. Returns \`false\` if NetBox::Client object is
     defined and \`error\` flag is not set and \`true\` otherwise.
 
 - **errno()**
@@ -271,28 +263,32 @@ noticeably faster, then REST. So, about the limitations:
 
 # **AUTHORS**
 
-- **\*** Volodymyr Pidgornyi, vp&lt;at>dtel-ix.net;
+- Volodymyr Pidgornyi, vp&lt;at>dtel-ix.net;
 
 # **CHANGELOG**
 
-- **v0.1.4**
+### v0.1.5 - 2025-10-08
 
-    \- LICENSE added;
-    \- automation issues fixes;
-    \- README.md is now generated from module POD;
-    \- RPM spec-file fixes.
+- renamed module to NetBox::Client to match CPAN naming conventions.
 
-- **v0.1.3**
+### v0.1.4
 
-    \- CPAN compatibility fixes. Again.
+- LICENSE added;
+- automation issues fixes;
+- README.md is now generated from module POD;
+- RPM spec-file fixes.
 
-- **v0.1.1**
+### v0.1.3
 
-    \- CPAN compatibility fixes.
+- CPAN compatibility fixes. Again.
 
-- **v0.1.0**
+### v0.1.1
 
-    \- Initial public release.
+- CPAN compatibility fixes.
+
+### v0.1.0
+
+- Initial public release.
 
 # **TODO**
 
@@ -300,18 +296,7 @@ noticeably faster, then REST. So, about the limitations:
 
 # **LINKS**
 
-- **\***
-
-    [NetBox Documentation](https://netboxlabs.com/docs/netbox/);
-
-- **\***
-
-    [NetBox Source](https://github.com/netbox-community/netbox);
-
-- **\***
-
-    [NetBox REST API Overview](https://netboxlabs.com/docs/netbox/integrations/rest-api/);
-
-- **\***
-
-    [NetBox GraphQL API Overview](https://netboxlabs.com/docs/netbox/integrations/graphql-api/);
+- [NetBox Documentation](https://netboxlabs.com/docs/netbox/);
+- [NetBox Source](https://github.com/netbox-community/netbox);
+- [NetBox REST API Overview](https://netboxlabs.com/docs/netbox/integrations/rest-api/);
+- [NetBox GraphQL API Overview](https://netboxlabs.com/docs/netbox/integrations/graphql-api/);

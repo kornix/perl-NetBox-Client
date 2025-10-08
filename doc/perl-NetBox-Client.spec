@@ -1,11 +1,11 @@
-Name:           perl-NetBox-API
-Version:        0.1.4
+Name:           perl-NetBox-Client
+Version:        0.1.5
 Release:        1%{?dist}
-Summary:        perl interface to NetBox API
+Summary:        NetBox API perl client
 License:        Distributable, see LICENSE
 Group:          Development/Libraries
-URL:            https://github.com/kornix/perl-NetBox-API
-Source0:        NetBox-API-%{version}.tar.gz
+URL:            https://github.com/kornix/perl-NetBox-Client
+Source0:        NetBox-Client-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -18,13 +18,13 @@ Requires:	perl(HTTP::Request)
 Requires:	perl(JSON)
 Requires:	perl(LWP::UserAgent)
 Requires:	perl(URI::Escape)
-Provides:	perl(NetBox::API)
+Provides:	perl(NetBox::Client)
 
 %description
-Perl interface to NetBox DCIM/IPAM both REST and GraphQL API
+NetBox DCIM/IPAM both REST and GraphQL API perl client
 
 %prep
-%setup -q -n NetBox-API-%{version}
+%setup -q -n NetBox-Client-%{version}
 
 rm -f pm_to_blib
 
@@ -50,12 +50,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes LICENSE MYMETA.json MYMETA.yml README.md
+%doc Changes LICENSE MYMETA.json MYMETA.yml README.md doc/perl-NetBox-Client.spec
 %dir %{perl_vendorlib}/NetBox
 %{perl_vendorlib}/NetBox/*
 %{_mandir}/man3/NetBox*
 
 %changelog
+
+* Wed Oct  8 2025 Volodymyr Pidgornyi <vp@dtel-ix.net> 0.1.5
+- renamed module to NetBox::Client to match CPAN naming conventions.
 
 * Fri Sep 26 2025 Volodymyr Pidgornyi <vp@dtel-ix.net> 0.1.4
 - LICENSE added;

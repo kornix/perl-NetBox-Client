@@ -1,10 +1,10 @@
-package NetBox::API;
+package NetBox::Client;
 
 =pod #{{{ main documentation section
 
 =head1 NAME
 
-B<NetBox::API> - perl5 interface to NetBox API
+B<NetBox::Client> - perl5 interface to NetBox API
 
 =head1 DESCRIPTION
 
@@ -15,9 +15,7 @@ modification and deletion) as described in NetBox API Overview.
 
 =over 4                                                                                                                             
                                                                                                                                     
-=item B<*>
-
-This module is written using `signatures` feature. As for me,
+=item This module is written using `signatures` feature. As for me,
 it makes code clearer. However, it requires perl 5.10+. All
 more or less modern OSes has much more newer perl included, so
 don't think it will be a problem.
@@ -32,32 +30,24 @@ noticeably faster, then REST. So, about the limitations:
 
 =over 4
 
-=item B<*> GraphQL is disabled by default
+=item GraphQL support is disabled in NetBox by default; to enable it, you have to
+set `GRAPHQL_ENABLED` option to `true` in NetBox configuration file; E<10> E<8>
 
-GraphQL support is disabled in NetBox by default; to enable it, you have to
-set `GRAPHQL_ENABLED` option to `true` in NetBox configuration file;
+=item GraphQL is intended for data retrievement only; E<10> E<8>
 
-=item B<*> GraphQL is intended for data retrievement only
+=item Custom fields can be used as filters in NetBox **v4.4+** only! E<10> E<8>
 
-=item E<10> E<8>
-
-=item B<*> Custom fields as filters
-
-Custom fields can be used as filters in NetBox **v4.4+** only!
-
-=item B<*> Custom fields returned
-
-It is possible either not to retrieve custom fields at all or to retrieve all
+=item It is possible either not to retrieve custom fields at all or to retrieve all
 of them - there is no way to retrieve only part of them. At least in current
-NetBox version.
+NetBox version. E<10> E<8>
 
 =back
 
 =head1 B<SYNOPSIS>
 
-    use NetBox::API;
+    use NetBox::Client;
     
-    my $netbox = NetBox::API->new(
+    my $netbox = NetBox::Client->new(
         'baseurl' => 'https://localhost:8001',
         'token'   => 'authorization+token',
         'method'  => 'rest'
@@ -90,7 +80,7 @@ no warnings qw(experimental::signatures);
 use feature qw(signatures);
 use utf8;
 use boolean qw(:all);
-use parent qw(NetBox::API::Common);
+use parent qw(NetBox::Client::Common);
 
 use Class::Load qw(:all);
 use Class::XSAccessor {
@@ -129,7 +119,7 @@ BEGIN {
 #   our %EXPORT_TAGS = (TAG1 => [ qw(1 2) ], TAG2 => [ qw(3 4) ], 'all' => [ qw(1 2 3 4) ] );
 } #}}}
 
-our $VERSION = $NetBox::API::Common::VERSION;
+our $VERSION = $NetBox::Client::Common::VERSION;
 
 =pod
 
@@ -146,9 +136,9 @@ sub new :prototype($%) ($class, %options) {
                                                                                                                                     
 =item B<new(OPTIONS)>                                                                                                 
                                                                                                                                     
-NetBox::API object constructor. Is used as follows:
+NetBox::Client object constructor. Is used as follows:
                                                                                                                                     
-    my $netbox = NetBox::API->new(
+    my $netbox = NetBox::Client->new(
         'baseurl' => 'http://localhost:8001',
         'token'   => 'authorization+token',
         'mode'    => 'rest',
@@ -193,8 +183,8 @@ Be quiet when set to `true` (which is default). Currently not implemented.
 =cut #}}}
 
     my $self = bless {
-        'errno'  => NetBox::API::Common::E_OK->[0],
-        'errmsg' => NetBox::API::Common::E_OK->[1],
+        'errno'  => NetBox::Client::Common::E_OK->[0],
+        'errmsg' => NetBox::Client::Common::E_OK->[1],
         'error'  => boolean::false,
     }, __PACKAGE__;
     foreach  my $key (keys %{(DEFAULTS)}) {
@@ -399,15 +389,15 @@ argument required, as described in NetBox REST API Overview:
 
 =over 4
 
-=item B<*> retrieve() -S< >`GET`;
+=item retrieve() - `GET`;
 
-=item B<*> create() -S<   >`POST`;
+=item create() - `POST`;
 
-=item B<*> replace() -S<  >`PUT`;
+=item replace() - `PUT`;
 
-=item B<*> update() -S<   >`PATCH`;
+=item update() - `PATCH`;
 
-=item B<*> delete() -S<   >`DELETE`;
+=item delete() - `DELETE`;
 
 =back
 
@@ -424,12 +414,12 @@ inconvenient, although not forbidden.
     my $class = sprintf '%s::%s', __PACKAGE__, MODULES->{$self->mode};
     unless (is_class_loaded $class) {
         unless (load_class $class) {
-            $self->__seterror(NetBox::API::Common::E_NOCLASS, $class);
+            $self->__seterror(NetBox::Client::Common::E_NOCLASS, $class);
             return qw();
         }
     }
     unless ($class->can($method)) {
-        $self->__seterror(NetBox::API::Common::E_NOMETHOD, $class, $method);
+        $self->__seterror(NetBox::Client::Common::E_NOMETHOD, $class, $method);
         return qw();
     }
     return $class->__call($self, $method, $query, $vars);
@@ -446,7 +436,7 @@ sub error :prototype($) ($self) {
 
 =item B<error()>
 
-Takes no arguments. Returns `false` if NetBox::API object is
+Takes no arguments. Returns `false` if NetBox::Client object is
 defined and `error` flag is not set and `true` otherwise.
 
 =item B<errno()>
@@ -465,7 +455,7 @@ returned for no error.
         : boolean::true;
 } #}}}
 
-sub __seterror :prototype($$@) ($self, $error = NetBox::API::Common::E_OK, @list) {
+sub __seterror :prototype($$@) ($self, $error = NetBox::Client::Common::E_OK, @list) {
     #{{{
 
 =pod
@@ -480,7 +470,7 @@ not be called explicitly in any circumstances.
 
 =cut
 
-    $self->{'error'} = ($error->[0] == NetBox::API::Common::E_OK->[0])
+    $self->{'error'} = ($error->[0] == NetBox::Client::Common::E_OK->[0])
         ? boolean::false
         : boolean::true;
     $self->errno($error->[0]);
@@ -497,32 +487,55 @@ sub DESTROY {}
 
 =over 4
 
-=item B<*> Volodymyr Pidgornyi, vpE<lt>atE<gt>dtel-ix.net;
+=item Volodymyr Pidgornyi, vpE<lt>atE<gt>dtel-ix.net;
 
 =back
 
 =head1 B<CHANGELOG>
 
+=head3 v0.1.5 - 2025-10-08
+
 =over 4
 
-=item B<v0.1.4>
+=item renamed module to NetBox::Client to match CPAN naming conventions.
 
-- LICENSE added;
-- automation issues fixes;
-- README.md is now generated from module POD;
-- RPM spec-file fixes.
+=back
 
-=item B<v0.1.3>
+=head3 v0.1.4
 
-- CPAN compatibility fixes. Again.
+=over 4
 
-=item B<v0.1.1>
+=item LICENSE added;
 
-- CPAN compatibility fixes.
+=item automation issues fixes;
 
-=item B<v0.1.0>
+=item README.md is now generated from module POD;
 
-- Initial public release.
+=item RPM spec-file fixes.
+
+=back
+
+=head3 v0.1.3
+
+=over 4
+
+=item CPAN compatibility fixes. Again.
+
+=back
+
+=head3 v0.1.1
+
+=over 4
+
+=item CPAN compatibility fixes.
+
+=back
+
+=head3 v0.1.0
+
+=over 4
+
+=item Initial public release.
 
 =back
 
@@ -540,21 +553,13 @@ Make queries in REST and GraphQL modes interchangeable.
 
 =over 4
 
-=item B<*>
+=item L<NetBox Documentation|https://netboxlabs.com/docs/netbox/>;
 
-L<NetBox Documentation|https://netboxlabs.com/docs/netbox/>;
+=item L<NetBox Source|https://github.com/netbox-community/netbox>;
 
-=item B<*>
+=item L<NetBox REST API Overview|https://netboxlabs.com/docs/netbox/integrations/rest-api/>;
 
-L<NetBox Source|https://github.com/netbox-community/netbox>;
-
-=item B<*>
-
-L<NetBox REST API Overview|https://netboxlabs.com/docs/netbox/integrations/rest-api/>;
-
-=item B<*>
-
-L<NetBox GraphQL API Overview|https://netboxlabs.com/docs/netbox/integrations/graphql-api/>;
+=item L<NetBox GraphQL API Overview|https://netboxlabs.com/docs/netbox/integrations/graphql-api/>;
 
 =back
 

@@ -1,17 +1,17 @@
 BEGIN { $| = 1; print "1..1\n" }
 
-use NetBox::API;
+use NetBox::Client;
 
-if ($NetBox::API::VERSION < 0.0001) {
+if ($NetBox::Client::VERSION < 0.0001) {
    print STDERR <<EOF;
 
 ***
 *** WARNING
 ***
-*** old version of NetBox::API still installed,
+*** old version of NetBox::Client still installed,
 *** your perl library is corrupted.
 ***
-*** please manually uninstall older NetBox::API versions
+*** please manually uninstall older NetBox::Client versions
 *** or use "make install UNINST=1" to remove them.
 ***
 

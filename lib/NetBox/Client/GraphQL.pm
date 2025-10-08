@@ -1,9 +1,9 @@
-package NetBox::API::GraphQL;
+package NetBox::Client::GraphQL;
 use strict;
 use warnings 'FATAL' => 'all';
 no warnings qw(experimental::signatures);
 use feature qw(signatures);
-use parent qw(NetBox::API::Common);
+use parent qw(NetBox::Client::Common);
 
 use Data::Dumper;
 use GraphQL::Client;
@@ -16,7 +16,7 @@ BEGIN {
     our @EXPORT_OK = qw();
 } #}}}
 
-our $VERSION = $NetBox::API::Common::VERSION;
+our $VERSION = $NetBox::Client::Common::VERSION;
 
 sub __call :prototype($$$$$) ($class, $self, $method, $query, $vars = {}) {
     #{{{
@@ -32,7 +32,7 @@ sub __call :prototype($$$$$) ($class, $self, $method, $query, $vars = {}) {
         delete $vars->{'fields'};
         $q = sprintf 'query %s ($id: ID!) { %s(id: $id) { %s } }', $query, $query, $fields;
     } else {
-        $self->__seterror(NetBox::API::Common::E_NOTIMPLEMENTED);
+        $self->__seterror(NetBox::Client::Common::E_NOTIMPLEMENTED);
         return qw();
     }
     eval {
@@ -42,7 +42,7 @@ sub __call :prototype($$$$$) ($class, $self, $method, $query, $vars = {}) {
         alarm 0;
     };
     if ($@) {
-        $self->__seterror(NetBox::API::Common::E_TIMEOUT);
+        $self->__seterror(NetBox::Client::Common::E_TIMEOUT);
         return qw();
     }
     if (defined $response->{'data'} and defined $response->{'data'}{$query}) {
@@ -56,7 +56,7 @@ sub __call :prototype($$$$$) ($class, $self, $method, $query, $vars = {}) {
             $column = $response->{'errors'}[0]{'locations'}[0]{'column'};
             $errmsg = $response->{'errors'}[0]{'message'};
         }
-        $self->__seterror(NetBox::API::Common::E_BADQUERY, $line, $column, $errmsg);
+        $self->__seterror(NetBox::Client::Common::E_BADQUERY, $line, $column, $errmsg);
         return qw();
     }
 } #}}}

@@ -2,13 +2,10 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
-#my $makemakerversion = ($ExtUtils::MakeMaker::VERSION =~ s/_//g);
-#$makemakerversion =~ s/_//g;
-
 WriteMakefile(
-    NAME         => 'NetBox::API',
+    NAME         => 'NetBox::Client',
     AUTHOR       => 'Volodymyr Pidgornyi <vp@dtel-ix.net>',
-    VERSION      => '0.1.4',
+    VERSION      => '0.1.5',
     ABSTRACT     => 'perl interface to NetBox API',
     LICENSE      => 'apache_2_0',
     META_MERGE => {
@@ -16,8 +13,8 @@ WriteMakefile(
         'resources' => {
             'repository' => {
                 'type' => 'git',
-                'url'  => 'https://github.com/kornix/perl-NetBox-API.git',
-                'web'  => 'https://github.com/kornix/perl-NetBox-API',
+                'url'  => 'https://github.com/kornix/perl-NetBox-Client.git',
+                'web'  => 'https://github.com/kornix/perl-NetBox-Client',
             }
         }
     },
@@ -27,6 +24,6 @@ WriteMakefile(
     },
     test         => { TESTS => 't/*.t' },
     dist         => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean        => { FILES => 'NetBox-API-*' },
+    clean        => { FILES => 'NetBox-Client-*' },
 );
 

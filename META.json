@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : 2
    },
-   "name" : "NetBox-API",
+   "name" : "NetBox-Client",
    "no_index" : {
       "directory" : [
          "t",
@@ -40,10 +40,10 @@
    "resources" : {
       "repository" : {
          "type" : "git",
-         "url" : "https://github.com/kornix/perl-NetBox-API.git",
-         "web" : "https://github.com/kornix/perl-NetBox-API"
+         "url" : "https://github.com/kornix/perl-NetBox-Client.git",
+         "web" : "https://github.com/kornix/perl-NetBox-Client"
       }
    },
-   "version" : "v0.1.3",
+   "version" : "v0.1.5",
    "x_serialization_backend" : "JSON::PP version 4.16"
 }
