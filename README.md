@@ -22,15 +22,14 @@ noticeably faster, then REST. So, about the limitations:
 
 - GraphQL support is disabled in NetBox by default; to enable it, you have to
 set \`GRAPHQL\_ENABLED\` option to \`true\` in NetBox configuration file; 
- 
+
 - GraphQL is intended for data retrievement only; 
- 
+  
 - Custom fields can be used as filters in NetBox \*\*v4.4+\*\* only! 
- 
+  
 - It is possible either not to retrieve custom fields at all or to retrieve all
 of them - there is no way to retrieve only part of them. At least in current
 NetBox version. 
- 
 
 # **SYNOPSIS**
 
